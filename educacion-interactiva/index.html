@@ -1,0 +1,39 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Educación Interactiva V4</title>
+	
+	<!-- JQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	
+	<!-- Educación Interactiva V4 -->
+	<script src="js/educacion-interactiva-v4.js" charset="UTF-8" ></script>
+	
+	<!-- Crear lienzo -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			//  Create all the canvas,
+			//	Es: Crea todo el liezo
+			$boardUno=$('#iPlaceCanvas').eiCreateBoard();
+			$boardUno.createScene(function(){
+					//	Crea el objeto pedro
+					ei.objName('Pedro');
+					
+				})
+			$boardUno.createAnimation(function(){
+					//	Crea el objeto pedro
+					ei.objName('Pedro').accMoverEnX(20);
+					console.info('casa');
+				});
+			$boardUno.start();
+		});
+	</script>
+</head>
+<body>
+	<div id="iPlaceCanvas"></div>
+	<div id="iPlaceContenido">
+		Hola
+	</div>
+</body>
+</html>
