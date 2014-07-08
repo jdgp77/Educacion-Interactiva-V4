@@ -127,6 +127,33 @@ var ei_static = {
 	onCursorUp: function(){
 			
 		},
+	//	Realiza el prosesamiento de las acciones para poder mostrar estas
+	processActions: function(object)
+	{
+		//	Convierte las acciones en datos, ejemplo moveInX en posInX
+		object=this.actionsInData(object);
+		//	Borra las acciones despues de procesarlas
+		return this.clearActions(object);
+	},
+	//	Convierte las acciones en datos, ejemplo moveInX en posInX
+	actionsInData: function(object)
+		{
+			//	Pasa movimiento en posicion
+			object.posInX=object.posInX+object.movInX;
+			object.posInY=object.posInY+object.movInY;
+			
+			//	Retorna el objeto modificado
+			return object;
+		},
+	//	Borra las acciones, comunmente despues de procesarlas
+	clearActions: function(object)
+		{
+			object.moveInX=0;
+			object.moveInY=0;
+
+			//	Retorna el objeto modificado
+			return object;
+		},
 };
 
 function ei_things(father)
@@ -164,20 +191,24 @@ function ei_thing()
 	//	Numero del objeto
 	this.num;
 	//	Posicion en X
-	this.posEnX=0;
-	this.setPosInX=function(posEnX){ this.posEnX=posEnX; return this; }; this.getPosInX=function(posEnX){ return this.posEnX; }
-	this.setPosEnX=function(posEnX){ this.setPosInX(posEnX); }; this.getPosEnX=function(posEnX){ return this.getPosInX(posEnX); }
-	this.accMoveInX=function(movEnX){ this.posEnX=this.posEnX+movEnX; return this; }
-	this.accMoverEnX=function(movEnX){ return this.accMoveInX(movEnX); }
+	this.posInX=0;
+	this.setPosInX=function(posInX){ this.posInX=posInX; return this; }; this.getPosInX=function(posInX){ return this.posInX; }
+	this.setPosEnX=function(posInX){ this.setPosInX(posInX); }; this.getPosEnX=function(posInX){ return this.getPosInX(posInX); }
+	this.movInX=0;
+	this.accMoveInX=function(movInX){ this.movInX=movInX; return this; }
+	this.accMoverEnX=function(movInX){ return this.accMoveInX(movInX); }
 	//	Posicion en Y
-	this.posEnY=0;
-	this.setPosInY=function(posEnY){ this.posEnY=posEnY; return this; }; this.getPosInY=function(posEnY){ return this.posEnY; }
-	this.setPosEnY=function(posEnY){ this.setPosInY(posEnY); }; this.getPosEnY=function(posEnY){ return this.getPosInY(posEnY); }
-	this.accMoveInY=function(movEnY){ this.posEnY=this.posEnY+movEnY; return this; }
-	this.accMoverEnY=function(movEnY){ return this.accMoveInY(movEnY); }
+	this.posInY=0;
+	this.setPosInY=function(posInY){ this.posInY=posInY; return this; }; this.getPosInY=function(posInY){ return this.posInY; }
+	this.setPosEnY=function(posInY){ this.setPosInY(posInY); }; this.getPosEnY=function(posInY){ return this.getPosInY(posInY); }
+	this.movInY=0;
+	this.accMoveInY=function(movInY){ this.movInY=movInY; return this; }
+	this.accMoverEnY=function(movInY){ return this.accMoveInY(movInY); }
 	//	Colocar la posicion
-	this.setPos=function(posEnX,posEnY) { this.posEnX=posEnX; this.posEnY=posEnY; }
-	this.setPosition=function(posEnX,posEnY) { this.setPos(posEnX,posEnY); }
+	this.setPos=function(posInX,posInY) { this.posInX=posInX; this.posInY=posInY; }
+	this.setPosition=function(posInX,posInY) { this.setPos(posInX,posInY); }
+	this.accMove=function(movInX,movInY){ this.movInX=movInX; this.movInY=movInY; return this; }
+	
 	//	Ancho
 	this.width=10;
 	this.setWidth=function(width){ this.width=width; }; this.getWidth=function(width){ return this.width; }
@@ -397,8 +428,10 @@ function ei_object(options)
 		{
 			//	Objeto con datos
 			var object=this.ei_things.arObject[contObject];
+			//	Convertir acciones en movimiento
+			object=ei_static.processActions(object);
 			//	Crea un rectangulo
-			this.oDivThings.innerHTML='<svg width="'+object.width+'" height="'+object.height+'" style="position: absolute;" ><rect width="'+object.width+'" height="'+object.height+'" /></svg>';
+			this.oDivThings.innerHTML='<svg width="'+object.width+'" height="'+object.height+'" style="position: absolute; top:'+object.posInX+'px; left:'+object.posInY+'px;" ><rect width="'+object.width+'" height="'+object.height+'" /></svg>';
 		}
 	}
 }
