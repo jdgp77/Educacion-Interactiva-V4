@@ -50,7 +50,7 @@ function ei_animation(father)
 				setTimeout("ei_animation_static.arEiAnimation["+this.numAnimacion+"].animate();",this.controlSegundos(this.milisegundosInicio,this.numPasos,this.pasosPorUnSegundo));
 			}
 			catch(err)
-			{ this.bnRunAnimation=false; }
+			{ this.bnRunAnimation=false; console.err('Error en la funcion de la animación: '+err);}
 		}
 	}
 	//	Retorna en cuanto tiempo tiene que ejecutar el siguiente
@@ -227,6 +227,9 @@ function ei_thing()
 	//	swish,forma,input
 	this.tipo='forma';
 	this.setTipo=function(tipo){ this.tipo=tipo; }; this.getTipo=function(tipo){ return this.tipo; }
+	//	Formato predefinido
+	this.setPredefinedFormat=function(predefinedFormat)
+	{  };
 	//	Propiedades
 	this.arProperties=new Array();
 	this.addPropertie=function(propertie){ this.arProperties[this.arProperties.length]=propertie; };
@@ -240,6 +243,9 @@ function ei_thing()
 	//	Habilitar el arrastrar
 	this.bnEnableDragAndDrop=false;
 	this.enableDragAndDrop=function(){ this.bnEnableDragAndDrop=true; }; this.disableDragAndDrop=function(){ this.bnEnableDragAndDrop=false; }; this.getBnEnableClick=function(){ return this.bnEnableDragAndDrop; };
+	
+	this.object;
+	this.arSubObj=new Array();
 }
 
 function ei_object(options)
@@ -430,8 +436,81 @@ function ei_object(options)
 			var object=this.ei_things.arObject[contObject];
 			//	Convertir acciones en movimiento
 			object=ei_static.processActions(object);
+			
+			//	Si ya esta creado el svg
+			if(!object.object)
+			{
+				object.object=document.createElement('div');
+				object.object.style.position='absolute';
+				object.object.style.top=object.posInY+'px';
+				object.object.style.left=object.posInX+'px';
+				object.object.style.width=object.width+'px';
+				object.object.style.height=object.height+'px';
+				this.oDivThings.appendChild(object.object);
+				
+				var numSubObject=0;
+				object.arSubObj[numSubObject] = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+				object.arSubObj[numSubObject].setAttribute("width", object.width+'px');
+				object.arSubObj[numSubObject].setAttribute("height", object.height+'px');
+				object.arSubObj[numSubObject].style.position='absolute';
+				//object.object.setAttribute("draggable", "false");
+				object.object.appendChild(object.arSubObj[numSubObject]);
+				numSubObject++;
+				
+				object.arSubObj[numSubObject] = document.createElementNS(object.arSubObj[numSubObject-1].namespaceURI, "rect");
+				//object.subobject.setAttribute("x", "0%");
+				//object.subobject.setAttribute("y", "0%");
+				object.arSubObj[numSubObject].setAttribute("width", object.width+'px');
+				object.arSubObj[numSubObject].setAttribute("height", object.height+'px');
+				//object.subobject.setAttribute("fill", "white");
+				object.arSubObj[numSubObject-1].appendChild(object.arSubObj[numSubObject]);
+				numSubObject++;
+			
+				/*
+				// "circle" may be any tag name
+				object.object=document.createElement('svg');
+				//	Agregamos el objeto al elemento
+				this.oDivThings.appendChild(object.object);
+				//	Colocamos los esilos
+				object.object.style.width=object.width+'px';
+				object.object.style.height=object.height+'px';
+				object.object.style.position='absolute';
+				object.object.style.top=object.posInY+'px';
+				object.object.style.left=object.posInX+'px';
+				
+				object.subobject = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+				// Set any attributes as desired
+				object.subobject.setAttribute("width", object.width);
+				object.subobject.setAttribute("height", object.height);
+				//	object.subobject.setAttribute("fill", "green");
+
+				//	Agregamos el objeto al elemento
+				object.object.appendChild(object.subobject);
+				
+				//	Creamos el svg
+				object.object=document.createElement('svg');
+				//	Colocamos los esilos
+				object.object.style.width=object.width+'px';
+				object.object.style.height=object.height+'px';
+				object.object.style.position='absolute';
+				object.object.style.top=object.posInY+'px';
+				object.object.style.left=object.posInX+'px';
+				//	Creamos el elemento rect
+				object.object.innerHTML='<rect width="'+object.width+'" height="'+object.height+'" />';
+				*/ 
+			}
+			else
+			{
+				object.object.style.top=object.posInY+'px';
+				object.object.style.left=object.posInX+'px';
+			}
+			
 			//	Crea un rectangulo
-			this.oDivThings.innerHTML='<svg width="'+object.width+'" height="'+object.height+'" style="position: absolute; top:'+object.posInX+'px; left:'+object.posInY+'px;" ><rect width="'+object.width+'" height="'+object.height+'" /></svg>';
+			//	this.oDivThings.innerHTML='<svg style="'+estilosDelObjeto+'" ><rect width="'+object.width+'" height="'+object.height+'" /></svg>';
+			
+			
+			//	Estilos del objeto
+			//	var estilosDelObjeto='width: '+object.width+'; height:'+object.height+'; position: absolute; top:'+object.posInY+'px; left:'+object.posInX+'px; ';
 		}
 	}
 }

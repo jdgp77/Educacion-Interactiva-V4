@@ -18,12 +18,17 @@
 			$boardUno=$('#iPlaceCanvas').eiCreateBoard();
 			$boardUno.createScene(function(){
 					//	Crea el objeto pedro
-					ei.objName('Pedro').setPosInX(20);
+					ei.objName('Pedro').setPosInX(50,20);
+					//	Crea el objeto Carlos
+					ei.objName('Carlos').setPos(20,50);
 					
+					ei.objName('Ana').setPosInX(0,0);
 				})
 			$boardUno.createAnimation(function(){
-					//	Crea el objeto pedro
-					ei.objName('Pedro').accMoverEnX(1);
+					ei.objName('Pedro').accMoverEnX(.5);
+					ei.objName('Carlos').accMoverEnX(-.5);
+					
+					ei.objName('Ana').accMove(.5,.5);
 				});
 			$boardUno.start();
 		});
