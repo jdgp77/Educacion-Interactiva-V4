@@ -17,12 +17,16 @@
 			//	Es: Crea todo el liezo
 			$boardUno=$('#iPlaceCanvas').eiCreateBoard();
 			$boardUno.createScene(function(){
+					ei.objName('AmigoTitulo').itIs('text').setValue('Animación');
+					ei.objName('AmigoTitulo').setPos(30,10).setClassName('casa');
+					
 					//	Crea el objeto pedro
 					ei.objName('Pedro').setPosInX(0,10);
 					//	Crea el objeto Carlos
 					ei.objName('Carlos').setPos(154-10,42);
 					
-					ei.objName('Ana').setPos(0,12).itIs('input');
+					ei.objName('Ana').setPos(20,60).itIs('input');
+					
 					ei.objName('DonCirculo').setPos(40,40).itIs('circle');
 				})
 			$boardUno.createAnimation(function(){

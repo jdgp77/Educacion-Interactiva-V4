@@ -220,6 +220,21 @@ function ei_thing()
 	//	Radio
 	this.radio=5;
 	this.setRadio=function(radio){ this.radio=radio; }; this.getRadio=function(radio){ return this.radio; }
+	//	Class 
+	this.className='';
+	this.bnClassName=false;
+	this.prExistClassName=function(){ return this.bnClassName; }
+	this.setClassName=function(className){ this.className=className; this.bnClassName=true; return this; };
+	this.getClassName=function(){ return this.className; }
+	
+	//	Fuente
+	this.fontFamily='Arial';
+	this.setFontFamily=function(fontFamily){ this.fontFamily=fontFamily; return this; };
+	this.getFontFamily=function(){ return this.fontFamily; };
+	this.fontSize='13px';
+	this.setFontSize=function(fontSize){ this.fontSize=fontSize; return this; };
+	this.getFontSize=function(){ return this.fontSize; };
+	
 	//	Forma
 	this.form='rectangle';
 	this.setForm=function(form){ this.form=form; }; this.getForm=function(){ return this.form; };
@@ -254,6 +269,12 @@ function ei_thing()
 				this.setHeight(22+'px');
 				break;
 			}
+			case 'text':
+			{
+				this.setType('text');
+				break;
+			}
+			
 		}
 		return this;
 	};
@@ -264,7 +285,10 @@ function ei_thing()
 	this.getProperties=function(){ return this.arProperties; }
 	//	Todo los objetos tienen un valor por defecto cero
 	this.value=0;
-	this.setValue=function(value){ this.value=value; }; this.getValue=function(value){ return this.value; }
+	this.setValue=function(value){ this.value=value; this.setObjValue(this.value); return this; };
+	//	Esta sera remplazada por la funcion que colocara el valor en el objeto
+	this.setObjValue=function(value) {  };
+	this.getValue=function(value){ return this.value; }
 	//	Habilitar el onclick
 	this.bnEnableClick=false;
 	this.enableClick=function(){ this.bnEnableClick=true; }; this.disableClick=function(){ this.bnEnableClick=false; }; this.getBnEnableClick=function(){ return this.bnEnableClick; };
@@ -534,13 +558,30 @@ function ei_object(options)
 						var numSubObject=0;
 						object.arSubObj[numSubObject] = document.createElement('input');
 						object.object.appendChild(object.arSubObj[numSubObject]);
+						object.arSubObj[numSubObject].style.fontFamily=object.getFontFamily();
+						object.arSubObj[numSubObject].style.fontSize=object.getFontSize();
+						if(object.prExistClassName()) { object.arSubObj[numSubObject].className=object.getClassName(); }
 						object.arSubObj[numSubObject].object=object;
-						object.arSubObj[numSubObject].onchange=function() {
-								this.object.setValue(this.value);
-							}
+						object.setObjValue=function(value)
+						{ this.arSubObj[0].value=value; }
+						object.arSubObj[numSubObject].onchange=function()
+						{ this.object.setValue(this.value); }
 						object.arSubObj[numSubObject].style.width=object.getWidth();
 						object.arSubObj[numSubObject].style.height=object.getHeight();
 						numSubObject++;
+					}
+					break;
+				case 'text':
+					if(!bnYaEstaCreadoElOjeto)
+					{
+						var numSubObject=0;
+						object.arSubObj[numSubObject] = document.createElement('span');
+						if(object.prExistClassName()) { object.arSubObj[numSubObject].className=object.getClassName(); }
+						object.object.appendChild(object.arSubObj[numSubObject]);
+						object.arSubObj[numSubObject].style.fontFamily=object.getFontFamily();
+						object.arSubObj[numSubObject].style.fontSize=object.getFontSize();
+						object.arSubObj[numSubObject].object=object;
+						object.arSubObj[numSubObject].appendChild(document.createTextNode(object.getValue()));
 					}
 					break;
 			}
