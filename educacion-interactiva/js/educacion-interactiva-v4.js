@@ -205,7 +205,7 @@ function ei_thing()
 	this.accMoveInY=function(movInY){ this.movInY=movInY; return this; }
 	this.accMoverEnY=function(movInY){ return this.accMoveInY(movInY); }
 	//	Colocar la posicion
-	this.setPos=function(posInX,posInY) { this.posInX=posInX; this.posInY=posInY; }
+	this.setPos=function(posInX,posInY) { this.posInX=posInX; this.posInY=posInY; return this; }
 	this.setPosition=function(posInX,posInY) { this.setPos(posInX,posInY); }
 	this.accMove=function(movInX,movInY){ this.movInX=movInX; this.movInY=movInY; return this; }
 	
@@ -222,14 +222,42 @@ function ei_thing()
 	this.setRadio=function(radio){ this.radio=radio; }; this.getRadio=function(radio){ return this.radio; }
 	//	Forma
 	this.form='rectangle';
-	this.setForm=function(form){ this.form=form; }; this.getForm=function(form){ return this.form; };
+	this.setForm=function(form){ this.form=form; }; this.getForm=function(){ return this.form; };
 	//	Tipo de objeto es
 	//	swish,forma,input
-	this.tipo='forma';
-	this.setTipo=function(tipo){ this.tipo=tipo; }; this.getTipo=function(tipo){ return this.tipo; }
+	this.type='form';
+	this.setType=function(type){ this.type=type; }; this.getType=function(){ return this.type; }
+	this.subType='rectangle';
+	this.setSubType=function(subType){ this.subType=subType; }; this.getSubType=function(){ return this.subType; }
+	
 	//	Formato predefinido
-	this.setPredefinedFormat=function(predefinedFormat)
-	{  };
+	this.itIs=function(itIs)
+	{
+		switch(itIs)
+		{
+			case 'rectagle':
+			{
+				this.setType('form');
+				this.setSubType('rectagle');
+				break;
+			}
+			case 'circle':
+			{
+				this.setType('form');
+				this.setSubType('circle');
+				break;
+			}
+			case 'input':
+			{
+				this.setType('input');
+				this.setWidth(150+'px');
+				this.setHeight(22+'px');
+				break;
+			}
+		}
+		return this;
+	};
+	this.esUn=function(itIs) { return this.itIs(itIs); }
 	//	Propiedades
 	this.arProperties=new Array();
 	this.addPropertie=function(propertie){ this.arProperties[this.arProperties.length]=propertie; };
@@ -310,8 +338,8 @@ function ei_object(options)
 			//	Colocamos la posicion relativa
 			this.oDiv.style.position='relative';
 			//	Colocamos el ancho y el alto
-			this.oDiv.width=this.info.width;
-			this.oDiv.height=this.info.height;
+			this.oDiv.style.width=this.info.width+'px';
+			this.oDiv.style.height=this.info.height+'px';
 			//	Colocamos un overflow hidden
 			this.oDiv.style.overflow='hidden';
 			
@@ -323,6 +351,11 @@ function ei_object(options)
 			this.oDiv.appendChild(this.oDivThings);
 			//	Colocamos la posicion absolute
 			this.oDivThings.style.position='absolute';
+			//	Colocamos el ancho y el alto
+			this.oDivThings.style.width=this.info.width+'px';
+			this.oDivThings.style.height=this.info.height+'px';
+			//	Colocamos un overflow hidden
+			this.oDivThings.style.overflow='hidden';
 			
 			//	Canvas
 			//	------
@@ -436,75 +469,81 @@ function ei_object(options)
 			var object=this.ei_things.arObject[contObject];
 			//	Convertir acciones en movimiento
 			object=ei_static.processActions(object);
-			
-			//	Si ya esta creado el svg
-			if(!object.object)
-			{
-				object.object=document.createElement('div');
-				object.object.style.position='absolute';
-				object.object.style.top=object.posInY+'px';
-				object.object.style.left=object.posInX+'px';
-				object.object.style.width=object.width+'px';
-				object.object.style.height=object.height+'px';
-				this.oDivThings.appendChild(object.object);
-				
-				var numSubObject=0;
-				object.arSubObj[numSubObject] = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-				object.arSubObj[numSubObject].setAttribute("width", object.width+'px');
-				object.arSubObj[numSubObject].setAttribute("height", object.height+'px');
-				object.arSubObj[numSubObject].style.position='absolute';
-				//object.object.setAttribute("draggable", "false");
-				object.object.appendChild(object.arSubObj[numSubObject]);
-				numSubObject++;
-				
-				object.arSubObj[numSubObject] = document.createElementNS(object.arSubObj[numSubObject-1].namespaceURI, "rect");
-				//object.subobject.setAttribute("x", "0%");
-				//object.subobject.setAttribute("y", "0%");
-				object.arSubObj[numSubObject].setAttribute("width", object.width+'px');
-				object.arSubObj[numSubObject].setAttribute("height", object.height+'px');
-				//object.subobject.setAttribute("fill", "white");
-				object.arSubObj[numSubObject-1].appendChild(object.arSubObj[numSubObject]);
-				numSubObject++;
-			
-				/*
-				// "circle" may be any tag name
-				object.object=document.createElement('svg');
-				//	Agregamos el objeto al elemento
-				this.oDivThings.appendChild(object.object);
-				//	Colocamos los esilos
-				object.object.style.width=object.width+'px';
-				object.object.style.height=object.height+'px';
-				object.object.style.position='absolute';
-				object.object.style.top=object.posInY+'px';
-				object.object.style.left=object.posInX+'px';
-				
-				object.subobject = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-				// Set any attributes as desired
-				object.subobject.setAttribute("width", object.width);
-				object.subobject.setAttribute("height", object.height);
-				//	object.subobject.setAttribute("fill", "green");
 
-				//	Agregamos el objeto al elemento
-				object.object.appendChild(object.subobject);
-				
-				//	Creamos el svg
-				object.object=document.createElement('svg');
-				//	Colocamos los esilos
-				object.object.style.width=object.width+'px';
-				object.object.style.height=object.height+'px';
-				object.object.style.position='absolute';
-				object.object.style.top=object.posInY+'px';
-				object.object.style.left=object.posInX+'px';
-				//	Creamos el elemento rect
-				object.object.innerHTML='<rect width="'+object.width+'" height="'+object.height+'" />';
-				*/ 
-			}
-			else
-			{
-				object.object.style.top=object.posInY+'px';
-				object.object.style.left=object.posInX+'px';
-			}
+			//	Si ya esta creado el svg
+			var bnYaEstaCreadoElOjeto=false;
+			if(object.object)
+			{ bnYaEstaCreadoElOjeto=true; }
 			
+			if(!bnYaEstaCreadoElOjeto)
+			{ object.object=document.createElement('div'); }
+			
+			object.object.style.position='absolute';
+			object.object.style.top=object.posInY+'px';
+			object.object.style.left=object.posInX+'px';
+			
+			if(!bnYaEstaCreadoElOjeto)
+			{ this.oDivThings.appendChild(object.object); }
+			
+			switch(object.getType())
+			{
+				case 'form':
+					switch(object.getSubType())
+					{
+						case 'rectangle':
+							var numSubObject=0;
+							object.arSubObj[numSubObject] = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+							object.arSubObj[numSubObject].setAttribute("width", object.width+'px');
+							object.arSubObj[numSubObject].setAttribute("height", object.height+'px');
+							object.arSubObj[numSubObject].style.position='absolute';
+							//object.object.setAttribute("draggable", "false");
+							object.object.appendChild(object.arSubObj[numSubObject]);
+							numSubObject++;
+							
+							object.arSubObj[numSubObject] = document.createElementNS(object.arSubObj[numSubObject-1].namespaceURI, "rect");
+							//object.subobject.setAttribute("x", "0%");
+							//object.subobject.setAttribute("y", "0%");
+							object.arSubObj[numSubObject].setAttribute("width", object.width+'px');
+							object.arSubObj[numSubObject].setAttribute("height", object.height+'px');
+							//object.subobject.setAttribute("fill", "white");
+							object.arSubObj[numSubObject-1].appendChild(object.arSubObj[numSubObject]);
+							numSubObject++;
+							break;
+						case 'circle':
+							var numSubObject=0;
+							object.arSubObj[numSubObject] = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+							object.arSubObj[numSubObject].setAttribute("width", object.getWidth()+'px');
+							object.arSubObj[numSubObject].setAttribute("height", object.getHeight()+'px');
+							object.arSubObj[numSubObject].style.position='absolute';
+							//object.object.setAttribute("draggable", "false");
+							object.object.appendChild(object.arSubObj[numSubObject]);
+							numSubObject++;
+							
+							object.arSubObj[numSubObject] = document.createElementNS(object.arSubObj[numSubObject-1].namespaceURI, "circle");
+							object.arSubObj[numSubObject].setAttribute("cx",object.getRadio()+'px');
+							object.arSubObj[numSubObject].setAttribute("cy",object.getRadio()+'px');
+							object.arSubObj[numSubObject].setAttribute("r",object.getRadio()+'px');
+							object.arSubObj[numSubObject-1].appendChild(object.arSubObj[numSubObject]);
+							numSubObject++;
+							break;
+					}
+					break;
+				case 'input':
+					if(!bnYaEstaCreadoElOjeto)
+					{
+						var numSubObject=0;
+						object.arSubObj[numSubObject] = document.createElement('input');
+						object.object.appendChild(object.arSubObj[numSubObject]);
+						object.arSubObj[numSubObject].object=object;
+						object.arSubObj[numSubObject].onchange=function() {
+								this.object.setValue(this.value);
+							}
+						object.arSubObj[numSubObject].style.width=object.getWidth();
+						object.arSubObj[numSubObject].style.height=object.getHeight();
+						numSubObject++;
+					}
+					break;
+			}
 			//	Crea un rectangulo
 			//	this.oDivThings.innerHTML='<svg style="'+estilosDelObjeto+'" ><rect width="'+object.width+'" height="'+object.height+'" /></svg>';
 			
