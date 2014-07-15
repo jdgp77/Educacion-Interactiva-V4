@@ -281,6 +281,11 @@ function ei_thing()
 				this.setSubType('car__001');
 				break;
 			}
+			case 'html':
+			{
+				this.setType('html');
+				break;
+			}
 			
 		}
 		return this;
@@ -596,6 +601,13 @@ function ei_object(options)
 						object.arSubObj[numSubObject].style.fontSize=object.getFontSize();
 						object.arSubObj[numSubObject].object=object;
 						object.arSubObj[numSubObject].appendChild(document.createTextNode(object.getValue()));
+					}
+					break;
+				case 'html':
+					if(!bnYaEstaCreadoElOjeto)
+					{
+						var numSubObject=0;
+						object.object.innerHTML = object.getValue();
 					}
 					break;
 				case 'flaticon':
