@@ -583,6 +583,8 @@ function ei_object(options)
 						object.arSubObj[numSubObject] = document.createElement('span');
 						if(object.prExistClassName()) { object.arSubObj[numSubObject].className=object.getClassName(); }
 						object.object.appendChild(object.arSubObj[numSubObject]);
+						object.setObjValue=function(value)
+						{ this.arSubObj[0].innerHTML=value; }
 						object.arSubObj[numSubObject].style.fontFamily=object.getFontFamily();
 						object.arSubObj[numSubObject].style.fontSize=object.getFontSize();
 						object.arSubObj[numSubObject].object=object;
