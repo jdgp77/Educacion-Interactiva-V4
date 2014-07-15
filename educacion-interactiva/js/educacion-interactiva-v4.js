@@ -302,6 +302,9 @@ function ei_thing()
 
 function ei_object(options)
 {
+	this.setWidth=function(width) { this.info.width=width; return this; }
+	this.setHeight=function(height) { this.info.height=height; return this; }
+	this.setMeasures=function(width,height) { this.setWidth(width); return this.setHeight(height); }
 	
 	this.info={
 		//	Ancho del tablero
@@ -350,7 +353,7 @@ function ei_object(options)
 		{
 //	FALTA
 		}
-	this.createBoard=function(jQueryObject)
+	this.createBoard=function()
 		{
 			//	Div
 			//	---
@@ -358,7 +361,7 @@ function ei_object(options)
 			//	Crea el div que ira dentro
 			this.oDiv=document.createElement('div');
 			//	Agregamos el canvas al elemento
-			jQueryObject.append(this.oDiv);
+			this.jQueryObject.append(this.oDiv);
 			//	Colocamos la posicion relativa
 			this.oDiv.style.position='relative';
 			//	Colocamos el ancho y el alto
@@ -598,11 +601,31 @@ function ei_object(options)
 (function($)
 {
 	//	Create de canvas
-	$.fn.eiCreateBoard=function()
+	$.fn.eiCreateBoard=function(width,height)
 		{
 			//	Create a new board
 			var eiBoard=new ei_object();
+			//	Coloca las medidas
+			if(width!==undefined)
+			{
+				eiBoard.setWidth(width);
+				if(height!==undefined)
+				{ eiBoard.setHeight(height); }
+			}
+			//	Pasamos el objeto jQuert al tablero
+			eiBoard.jQueryObject=this;
 			//	Create a new board
-			return eiBoard.createBoard(this);
+			return eiBoard.createBoard();
 		};
+	//	Create de canvas
+	$.fn.eiLoadBoard=function()
+		{
+			//	Create a new board
+			var eiBoard=new ei_object();
+			//	Pasamos el objeto jQuert al tablero
+			eiBoard.jQueryObject=this;
+			//	Create a new board
+			return eiBoard;
+		};
+		
 }( jQuery ));

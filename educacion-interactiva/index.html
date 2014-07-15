@@ -13,34 +13,40 @@
 	<!-- Crear lienzo -->
 	<script type="text/javascript">
 		$(document).ready(function() {
-			//  Create all the canvas,
-			//	Es: Crea todo el liezo
-			$boardUno=$('#iPlaceCanvas').eiCreateBoard();
-			$boardUno.createScene(function(){
-					ei.objName('AmigoTitulo').itIs('text').setValue('Animación');
-					ei.objName('AmigoTitulo').setPos(30,10).setClassName('casa');
-					
-					//	Crea el objeto pedro
-					ei.objName('Pedro').setPosInX(0,10);
-					//	Crea el objeto Carlos
-					ei.objName('Carlos').setPos(154-10,42);
-					
-					ei.objName('Ana').setPos(20,60).itIs('input');
-					
-					ei.objName('DonCirculo').setPos(40,40).itIs('circle');
+		
+			$('#iniciar').click(function(){
+				//  Create all the canvas,
+				//	Es: Crea todo el liezo
+				$boardUno = $('#iPlaceCanvas').eiCreateBoard(500,200)//.eiLoadBoard().setMeasures(500,200).createBoard();
+				$boardUno.createScene(function(){
+				
+					// Creamos la presentacion de los objetos y los campos.
+					ei.objName('Titulo').itIs('text').setValue('Movimiento rectilíneo');
+					ei.objName('Titulo').setPos(100,10).setClassName('titulo');
+				
+					// Creamos los dos Autos.
+					x1 = parseInt($('#xAuto1').val());
+					x2 = parseInt($('#xAuto2').val());
+					ei.objName('auto1').setPos(x1,50);			
+					ei.objName('auto2').setPos(x2,50);
 				})
-			$boardUno.createAnimation(function(){
-					ei.objName('Pedro').accMoverEnX(.5);
-					ei.objName('Carlos').accMoverEnX(-.5);
-					
-					//	ei.objName('Ana').accMove(.5,.5);
-					
+				
+				$boardUno.createAnimation(function(){
+					ei.objName('auto1').accMoverEnX(.5);
+					ei.objName('auto2').accMoverEnX(-.5);
 				});
-			$boardUno.start();
+				$boardUno.start();
+
+			});
 		});
 	</script>
 </head>
 <body>
 	<div id="iPlaceCanvas"></div>
+	<label>Ingresa la distacia del primer Auto</label>
+	<input type="text" id="xAuto1" ><br>
+	<label>Ingresa la distacia del segundo Auto</label>
+	<input type="text" id="xAuto2" ><br>
+	<input type="Button" id="iniciar" value="Iniciar">
 </body>
 </html>
