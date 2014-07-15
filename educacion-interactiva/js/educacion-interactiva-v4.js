@@ -470,6 +470,8 @@ function ei_object(options)
 		{ this.father.ei_things=new ei_things(this); }
 		//	Coloca la variable global ei, con ei_things
 		ei=this.father.ei_things;
+		//	Para tener control de la animación
+		ei.animation=this;
 		//	Guardamos todas las cariables, para  crear la animación
 		this.father.fnCreateAnimation();
 		//	Dibuja las variables
