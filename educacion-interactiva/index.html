@@ -5,82 +5,28 @@
 	<title>Educación Interactiva V4</title>
 	
 	<!-- JQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="js/jquery-1.9.1.js"></script>
 	
 	<!-- Educación Interactiva V4 -->
 	<script src="js/educacion-interactiva-v4.js" charset="UTF-8" ></script>
-	
+
+	<!-- Todos pueden hacer framework -->
+	<script src="../create-complement/example.js" charset="UTF-8" ></script>
+
 	<!-- Crear lienzo -->
-	<script type="text/javascript">
+	<script type="text/javascript" charset="UTF-8" >
 		$(document).ready(function() {
-		
-			$('#iniciar').click(function(){
-				if($('#v').val() != "" && $('#x').val() != "" && $('#t').val() != ""){
-				//  Create all the canvas,
-				//	Es: Crea todo el liezo
-				$boardUno = $('#iPlaceCanvas').eiCreateBoard(500,200)//.eiLoadBoard().setMeasures(500,200).createBoard();
-				$boardUno.createScene(function(){
-				
-					// Creamos la presentacion de los objetos y los campos.
-					ei.objName('Titulo').itIs('text').setValue('Movimiento lineal uniforme');
-					ei.objName('Titulo').setPos(100,10).setClassName('titulo');
-						
-					// Creamos los dos Autos.
-					var t = parseInt($('#t').val());
-					var v = parseInt($('#v').val());
-					var x = parseInt($('#x').val());			
-					var ciudadA = ei.objName('ciudadA').itIs('circle');
-					var ciudadB = ei.objName('ciudadB').itIs('circle');
-					
-					ei.objName('auto').setPos(0,50).itIs('car__001');
-					ei.objName('distancia').itIs('text').setPos(0,60);
-					ei.objName('distancia').itIs('text').setValue(0);
-					ciudadA.setPos(0,50);			
-					ciudadB.setPos(x,50);
-					
-					var xRec = v*t;
-					x = x-xRec;
-					t = x/v;
-					
-					ei.objName('mensajeT').itIs('text').setValue("El tiempo faltante para llegar a la ciudad B es de: ");
-					ei.objName('tiempo').itIs('text').setValue(t+" horas");
-					ei.objName('mensajeT').itIs('text').setPos(0,100);
-					ei.objName('tiempo').itIs('text').setPos(300,100);
-									
-				})
-				
-				$boardUno.createAnimation(function(){
-					
-					ei.objName('auto').accMoverEnX(.5);
-					ei.objName('distancia').accMoverEnX(.5);
-					var dist = ei.objName('auto').getPosEnX();
-					ei.objName('distancia').setValue((ei.objName('auto').getPosEnX()).toFixed(0)+" Kms");
-					var t = parseInt($('#t').val());
-					var v = parseInt($('#v').val());
-					var x = t*v;
-					console.info('x: '+x);
-					console.info('dist: '+dist);
-					if(dist == x){
-						ei.animation.stop();
-					}
-					
-				});
-				$boardUno.start();
-				}
+
+					boardUno = $('#iPlaceCanvas').eiCreateBoard(500,200)//.eiLoadBoard().setMeasures(500,200).
+					boardUno.createScene(function(){
+						ei.objName('auto').setPos(0,50).itIs('basicflaticon__carro');
+					}).createAnimation(function(){	
+						ei.objName('auto').accMoverEnX(.5);
+					}).start();
 			});
-		});
 	</script>
 </head>
 <body>
-
-	<h2>PROBLEMA FISICA</h2><br>
-	<label>Un auto que parte de una ciudad A a una ciudad B, ha viajado durante</label>
-	<input type="text" id="t" ><label>Hrs</label><br>
-	<label>a una velocidad constante de</label>
-	<input type="text" id="v" ><label>Km/h.</label><br>
-	<label>Si la ciudad se encuentra a</label>
-	<input type="text" id="x" ><label>Kms, de la otra, ¿Cuánto tiempo debe transcurrir para que el auto llegue a la ciudad B, manteniendo la misma velocidad?</label><br>
-	<input type="Button" id="iniciar" value="Iniciar">
 	<div id="iPlaceCanvas"></div>
 </body>
 </html>
